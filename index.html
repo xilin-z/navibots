@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navi - 自闭症儿童的情感陪伴机器人</title>
+    <style>
+        :root {
+            --primary-color: #7CB9E8;
+            --secondary-color: #F0F8FF;
+            --text-color: #333;
+            --gradient-start: #7CB9E8;
+            --gradient-end: #4A90E2;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navi-face {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 50%;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .eyes {
+            display: flex;
+            justify-content: space-around;
+            padding: 60px 40px;
+        }
+
+        .eye {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .mouth {
+            width: 80px;
+            height: 40px;
+            border-radius: 0 0 40px 40px;
+            border: 3px solid white;
+            position: absolute;
+            bottom: 40px;
+            left: 57px;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .interaction-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .emotion-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(145deg, var(--primary-color), var(--gradient-end));
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::after {
+            width: 200%;
+            height: 200%;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .response-area {
+            min-height: 100px;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .response-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .option-button {
+            background: linear-gradient(145deg, #89c4f4, #7CB9E8);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .option-button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(145deg, #7CB9E8, #89c4f4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navi-face">
+            <div class="eyes">
+                <div class="eye"></div>
+                <div class="eye"></div>
+            </div>
+            <div class="mouth"></div>
+        </div>
+
+        <div class="interaction-panel">
+            <h2>今天的心情是？</h2>
+            <div class="emotion-buttons">
+                <button onclick="showEmotion('happy')">开心 😊</button>
+                <button onclick="showEmotion('sad')">难过 😢</button>
+                <button onclick="showEmotion('angry')">生气 😠</button>
+                <button onclick="showEmotion('scared')">害怕 😨</button>
+                <button onclick="showEmotion('excited')">兴奋 🤗</button>
+                <button onclick="showEmotion('tired')">疲惫 😴</button>
+            </div>
+
+            <div class="response-area" id="naviResponse">
+                你好！我是Navi，很高兴见到你！让我们一起度过美好的时光吧！
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showEmotion(emotion) {
+            const responses = {
+                'happy': {
+                    text: '看到你开心的样子，我也很开心！',
+                    options: [
+                        {text: '一起玩个游戏', action: 'playGame'},
+                        {text: '分享开心的事', action: 'shareStory'},
+                        {text: '画张快乐的画', action: 'drawPicture'}
+                    ]
+                },
+                'sad': {
+                    text: '我明白你现在感到难过，没关系的，我陪着你。',
+                    options: [
+                        {text: '听一首轻柔的音乐', action: 'playMusic'},
+                        {text: '聊聊让你难过的事', action: 'talkAboutIt'},
+                        {text: '一起做个深呼吸', action: 'breathe'}
+                    ]
+                },
+                'angry': {
+                    text: '生气是很正常的情绪。',
+                    options: [
+                        {text: '一起做深呼吸', action: 'breathe'},
+                        {text: '说说是什么让你生气', action: 'talkAboutIt'}
+                    ]
+                },
+                'scared': {
+                    text: '不要害怕，我就在这里陪着你。',
+                    options: [
+                        {text: '给你一个温暖的抱抱', action: 'hug'},
+                        {text: '说说让你害怕的事', action: 'talkAboutIt'},
+                        {text: '一起想办法解决', action: 'solveProblem'}
+                    ]
+                },
+                'excited': {
+                    text: '哇！你现在充满活力呢！',
+                    options: [
+                        {text: '分享让你兴奋的事', action: 'shareStory'},
+                        {text: '一起跳舞', action: 'dance'},
+                        {text: '画下这个美好时刻', action: 'drawPicture'}
+                    ]
+                },
+                'tired': {
+                    text: '如果觉得累了，我们可以一起休息一会儿。',
+                    options: [
+                        {text: '听一首轻柔的音乐', action: 'playMusic'},
+                        {text: '做个小冥想', action: 'meditate'}
+                    ]
+                }
+            };
+
+            const responseArea = document.getElementById('naviResponse');
+            const naviFace = document.querySelector('.navi-face');
+            
+            naviFace.classList.add('emotion-transition');
+            setTimeout(() => naviFace.classList.remove('emotion-transition'), 600);
+            
+            let responseHTML = `<p>${responses[emotion].text}</p><div class="response-options">`;
+            responses[emotion].options.forEach(option => {
+                responseHTML += `<button onclick="handleOption('${option.action}')" class="option-button">${option.text}</button>`;
+            });
+            responseHTML += '</div>';
+            
+            responseArea.innerHTML = responseHTML;
+        }
+
+        function handleOption(action) {
+            const actionResponses = {
+                'playGame': '太好了！我们来玩个有趣的记忆游戏吧！',
+                'shareStory': '我很想听听你的故事，请告诉我更多...',
+                'drawPicture': '画画是表达心情的好方法！让我们开始吧！',
+                'playMusic': '音乐总能让人心情变好，我为你播放一首轻柔的音乐...',
+                'talkAboutIt': '我在听，你可以慢慢告诉我...',
+                'breathe': '跟着我一起：吸气...1,2,3,4...呼气...1,2,3,4...',
+                'hug': '给你一个大大的拥抱 🤗',
+                'solveProblem': '让我们一起想想办法，一步一步来解决...',
+                'dance': '来跳支舞吧！让我们一起动起来！',
+                'meditate': '闭上眼睛，听着我的声音，慢慢放松...'
+            };
+
+            const responseArea = document.getElementById('naviResponse');
+            responseArea.innerHTML = `<p>${actionResponses[action]}</p>`;
+        }
+
+        // 眼睛跟随鼠标移动
+        document.addEventListener('mousemove', (e) => {
+            const eyes = document.querySelectorAll('.eye');
+            eyes.forEach(eye => {
+                const rect = eye.getBoundingClientRect();
+                const x = (rect.left + rect.width / 2);
+                const y = (rect.top + rect.height / 2);
+                const rad = Math.atan2(e.pageX - x, e.pageY - y);
+                const rot = (rad * (180 / Math.PI) * -1) + 180;
+                eye.style.transform = `rotate(${rot}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>
